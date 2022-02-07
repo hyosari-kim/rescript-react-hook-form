@@ -1,0 +1,33 @@
+{
+  "name": "res-hook-form",
+  "reason": {
+    "react-jsx": 3
+  },
+  "sources": [
+    {
+      "dir": "src",
+      "subdirs": true
+    },
+    {
+      "dir": "example",
+      "type": "dev"
+    }
+  ],
+  "package-specs": [
+    {
+      "module": "es6",
+      "in-source": true
+    }
+  ],
+  "suffix": ".mjs",
+  "namespace": false,
+  "bs-dependencies": ["@rescript/react"],
+  "bs-dev-dependencies": [],
+  "ppx-flags": [],
+  "warnings": {
+    "error": true,
+    "number": "-48"
+  },
+  "generators": [],
+  "bsc-flags": ["-open Belt"]
+}
