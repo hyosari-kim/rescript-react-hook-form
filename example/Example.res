@@ -1,15 +1,29 @@
 module FormWithRegister = {
+  module FormFields = %lenses(
+    type state = {
+      firstName: string,
+      category: string,
+      aboutYou: string,
+    }
+  )
+
   @react.component
   let make = () => {
-    let {handleSubmit, register} = Hooks.Form.use(.
-      ~config=Hooks.Form.config(~mode=#onSubmit, ()),
+    module Form = Hooks.Form(FormFields)
+    let {handleSubmit, register, formState: {errors}} = Form.use(.
+      ~config=Form.config(~mode=#onSubmit, ()),
       (),
     )
     let (result, setResult) = React.Uncurried.useState(_ => "")
 
-    let onSubmit = (data: Js.Json.t, _event) => {
+    let onSubmit = (data: FormFields.state, _event) => {
+      Js.log(data.firstName)
+      Js.log(data.category)
+      Js.log(data.aboutYou)
       setResult(._ => data->Js.Json.stringifyAny->Option.getWithDefault(""))
     }
+
+    Js.log(errors)
 
     let firstName = register(. "firstName")
     let category = register(. "category")

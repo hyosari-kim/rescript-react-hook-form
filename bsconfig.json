@@ -23,7 +23,7 @@
   "namespace": false,
   "bs-dependencies": ["@rescript/react"],
   "bs-dev-dependencies": [],
-  "ppx-flags": [],
+  "ppx-flags": ["lenses-ppx/ppx"],
   "warnings": {
     "error": true,
     "number": "-48"

@@ -3,6 +3,10 @@ module P = {
   external make: (~children: React.element) => React.element = "FormProvider"
 }
 
-@react.component
-let make = (~children, ~methods: Hooks.Form.t) =>
-  <ReactUtil.SpreadProps props={methods}> <P> {children} </P> </ReactUtil.SpreadProps>
+module F = (Fields: Hooks.FormFields) => {
+  module Form = Hooks.Form(Fields)
+
+  @react.component
+  let make = (~children, ~methods: Form.t) =>
+    <ReactUtil.SpreadProps props={methods}> <P> {children} </P> </ReactUtil.SpreadProps>
+}

@@ -1,4 +1,11 @@
-module Form = {
+module type FormFields = {
+  type field<'a>
+  type state
+  let set: (state, field<'a>, 'a) => state
+  let get: (state, field<'a>) => 'a
+}
+
+module Form = (Fields: FormFields) => {
   type onSubmit = ReactEvent.Form.t => unit
 
   type formState = {
@@ -39,7 +46,7 @@ module Form = {
     control: Control.t,
     formState: formState,
     getValues: (. array<string>) => Js.Json.t,
-    handleSubmit: (. (@uncurry Js.Json.t, ReactEvent.Form.t) => unit) => onSubmit,
+    handleSubmit: (. (@uncurry Fields.state, ReactEvent.Form.t) => unit) => onSubmit,
     reset: (. option<Js.Json.t>) => unit,
     setError: (. string, Error.t) => unit,
     setFocus: (. string) => unit,
@@ -62,8 +69,10 @@ module Form = {
   external triggerAndFocus: (t, string, @as(json`{shouldFocus: true}`) _) => unit = "trigger"
 }
 
-module Controller = {
+module Controller = (Fields: FormFields) => {
   open Controller
+
+  module Form = Form(Fields)
   type t = {
     field: field,
     fieldState: fieldState,
@@ -107,7 +116,8 @@ module WatchValues = {
   external use: (@ignore input<'a, 'b>, ~config: config<'a>=?, unit) => option<'b> = "useWatch"
 }
 
-module Context = {
+module Context = (Fields: FormFields) => {
+  module Form = Form(Fields)
   @module("react-hook-form")
   external use: (. ~config: Form.config=?, unit) => Form.t = "useFormContext"
 }
