@@ -1,15 +1,13 @@
 module type FormFields = {
-  type field<'a>
   type state
-  let set: (state, field<'a>, 'a) => state
-  let get: (state, field<'a>) => 'a
+  type errors
 }
 
 module Form = (Fields: FormFields) => {
   type onSubmit = ReactEvent.Form.t => unit
 
   type formState = {
-    errors: Js.Dict.t<Error.t>,
+    errors: Fields.errors,
     isDirty: bool,
     dirtyFields: Js.Dict.t<bool>,
     touchedFields: Js.Dict.t<bool>,
@@ -51,7 +49,7 @@ module Form = (Fields: FormFields) => {
     setError: (. string, Error.t) => unit,
     setFocus: (. string) => unit,
     setValue: (. string, Js.Json.t) => unit,
-    register: (. string) => Register.t,
+    register: (. string, ~rules: Rules.t=?, unit) => Register.t,
   }
 
   @module("react-hook-form")

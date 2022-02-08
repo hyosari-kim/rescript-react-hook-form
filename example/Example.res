@@ -1,11 +1,18 @@
 module FormWithRegister = {
-  module FormFields = %lenses(
+  module FormFields = {
     type state = {
       firstName: string,
       category: string,
       aboutYou: string,
     }
-  )
+
+    //ppx 로 만들어주는거 어때요?
+    type errors = {
+      firstName: option<Error.t>,
+      category: option<Error.t>,
+      aboutYou: option<Error.t>,
+    }
+  }
 
   @react.component
   let make = () => {
@@ -17,17 +24,14 @@ module FormWithRegister = {
     let (result, setResult) = React.Uncurried.useState(_ => "")
 
     let onSubmit = (data: FormFields.state, _event) => {
-      Js.log(data.firstName)
-      Js.log(data.category)
-      Js.log(data.aboutYou)
       setResult(._ => data->Js.Json.stringifyAny->Option.getWithDefault(""))
     }
 
-    Js.log(errors)
+    let firstName = register(. "firstName", ~rules=Rules.make(~minLength=1, ~required=true, ()), ())
+    let category = register(. "category", ~rules=Rules.make(), ())
+    let aboutYou = register(. "aboutYou", ~rules=Rules.make(), ())
 
-    let firstName = register(. "firstName")
-    let category = register(. "category")
-    let aboutYou = register(. "aboutYou")
+    Js.log(errors.firstName)
 
     <form onSubmit={handleSubmit(. onSubmit)}>
       <h2 className="h2"> {"useForm with register"->React.string} </h2>
